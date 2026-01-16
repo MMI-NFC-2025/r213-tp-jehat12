@@ -1,26 +1,27 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import OfferCard from "../components/OfferCard.astro";
+import { offres } from "../data/offres.js";
 ---
 
 <Layout titre="Offres">
   <section class="mx-auto max-w-4xl px-6 py-10">
-    <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Offres</h1>
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Offres</h1>
+        <p class="mt-2 text-slate-600">Découvrez nos biens disponibles.</p>
+      </div>
 
-    <ul class="mt-6 grid gap-4">
-      <li class="rounded-2xl border border-slate-200 bg-white p-5">
-        <p class="text-sm text-slate-500">Appartement • T2 • Centre-ville</p>
-        <p class="mt-1 text-lg font-semibold text-slate-900">650€ / mois</p>
-      </li>
+      <a
+        href="/"
+        class="rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-200"
+      >
+        Retour accueil
+      </a>
+    </div>
 
-      <li class="rounded-2xl border border-slate-200 bg-white p-5">
-        <p class="text-sm text-slate-500">Maison • T4 • Jardin</p>
-        <p class="mt-1 text-lg font-semibold text-slate-900">1 250€ / mois</p>
-      </li>
-
-      <li class="rounded-2xl border border-slate-200 bg-white p-5">
-        <p class="text-sm text-slate-500">Studio • Proche transports</p>
-        <p class="mt-1 text-lg font-semibold text-slate-900">480€ / mois</p>
-      </li>
-    </ul>
+    <div class="mt-8 grid gap-4">
+      {offres.map((offre) => <OfferCard offre={offre} />)}
+    </div>
   </section>
 </Layout>
