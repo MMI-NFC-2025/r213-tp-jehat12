@@ -1,27 +1,23 @@
 ---
+import { Image } from "astro:assets";
 import { getImageUrl } from "../backend.mjs";
 
 const {
   record,
-  imageField = "images", // default : PocketBase multiple files
+  recordImage,
   width = 400,
   height = 300,
 } = Astro.props;
 
-// Compatible multiple (images[]) + single (image)
-const fileValue = record?.[imageField];
-const filename = Array.isArray(fileValue) ? fileValue[0] : fileValue;
-
-const imageURL = await getImageUrl(record, filename);
+const imageURL = record && recordImage ? getImageUrl(record, recordImage) : null;
 ---
 
 {imageURL && (
-  <img
+  <Image
     src={imageURL}
-    alt={record?.nomMaison || "Image"}
+    alt={record.nomMaison || "Image"}
     width={width}
     height={height}
-    loading="lazy"
-    class="h-auto w-full object-cover"
+    inferSize={true}
   />
 )}

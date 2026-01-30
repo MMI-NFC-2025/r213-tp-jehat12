@@ -1,13 +1,16 @@
 ---
 import PbImages from "./PbImages.astro";
-
 const { offre } = Astro.props;
 ---
 
-<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-  <PbImages record={offre} imageField="images" width={400} height={300} />
-  
-  <div class="p-4">
-    <h3 class="text-xl font-bold text-slate-900">{offre.nomMaison}</h3>
-  </div>
-</div>
+<article class="overflow-hidden rounded-lg bg-white shadow">
+  <PbImages
+    record={offre}
+    recordImage={offre.images?.[0]}
+    width={800}
+    height={520}
+  />
+  <h3 class="p-4 text-lg font-semibold text-slate-900">
+    {offre.nomMaison}
+  </h3>
+</article>
