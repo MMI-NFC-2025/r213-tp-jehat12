@@ -22,10 +22,13 @@ const offres = await getOffres();
       </a>
     </div>
 
-    <div class="mt-6">
-      <button id="favori-button" class="bg-slate-600 rounded-lg text-white p-2">
+    <div class="mt-6 flex gap-3">
+      <button id="favori-button" class="rounded-lg bg-slate-600 px-4 py-2 text-white hover:bg-slate-700">
         Afficher les favoris
       </button>
+      <a href="/offres/surface/80" class="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">
+        Surface > 80 m²
+      </a>
     </div>
 
     <p class="mb-4">NB offres: {offres.length}</p>
