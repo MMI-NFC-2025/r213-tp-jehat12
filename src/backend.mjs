@@ -17,3 +17,25 @@ export async function getOffres() {
 export function getImageUrl(record, recordImage) {
   return pb.files.getURL(record, recordImage);
 }
+
+export async function getOffre(id) {
+  try {
+    const data = await pb.collection("maison").getOne(id);
+    return data;
+  } catch (error) {
+    console.log("Erreur getOffre()", error);
+    return null;
+  }
+}
+
+export async function getOffresBySurface(surfaceMin) {
+  try {
+    return await pb.collection("maison").getFullList({
+      filter: `surface >= ${surfaceMin}`,
+      sort: "-created",
+    });
+  } catch (error) {
+    console.log(`Erreur surface >= ${surfaceMin}`, error);
+    return [];
+  }
+}
