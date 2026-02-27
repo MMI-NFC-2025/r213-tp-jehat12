@@ -1,9 +1,23 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import OffreCard from "../../components/OffreCard.astro";
-import { getOffres } from "../../backend.mjs";
+import { getOffres, filterByPrix } from "../../backend.mjs";
 
-const offres = await getOffres();
+let offres = await getOffres();
+let message = '';
+
+if (Astro.request.method === "POST") {
+  const data = await Astro.request.formData();
+  const minPrix = parseInt(data.get("minPrix"));
+  const maxPrix = parseInt(data.get("maxPrix"));
+
+  if (minPrix > 0 && maxPrix > 0 && maxPrix > minPrix) {
+    offres = await filterByPrix(minPrix, maxPrix);
+    message = offres.length ? `${offres.length} offre(s) ${minPrix}€-${maxPrix}€` : `Aucune entre ${minPrix}€-${maxPrix}€`;
+  } else {
+    message = "Prix invalides (min < max > 0).";
+  }
+}
 ---
 
 <Layout titre="Offres">
@@ -30,6 +44,20 @@ const offres = await getOffres();
         Surface > 80 m²
       </a>
     </div>
+
+    {message && (
+      <div class="mb-6 p-4 rounded-xl bg-indigo-50 border-l-4 border-indigo-500 text-indigo-900 text-sm">
+        {message}
+      </div>
+    )}
+
+    <form action="/offres" method="POST" class="mb-6 flex flex-col sm:flex-row gap-3 p-6 bg-indigo-50 rounded-2xl">
+      <input type="number" name="minPrix" placeholder="Prix min (€)" class="flex-1 p-4 border border-indigo-300 rounded-xl focus:ring-2 focus:ring-indigo-500" />
+      <input type="number" name="maxPrix" placeholder="Prix max (€)" class="flex-1 p-4 border border-indigo-300 rounded-xl focus:ring-2 focus:ring-indigo-500" />
+      <button type="submit" class="px-8 py-4 bg-indigo-800 text-white font-semibold rounded-xl hover:bg-indigo-900 whitespace-nowrap">
+        Filtrer
+      </button>
+    </form>
 
     <p class="mb-4">NB offres: {offres.length}</p>
 

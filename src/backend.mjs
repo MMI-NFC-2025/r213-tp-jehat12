@@ -39,3 +39,25 @@ export async function getOffresBySurface(surfaceMin) {
     return [];
   }
 }
+
+export async function addOffre(formData) {
+  try {
+    await pb.collection('maison').create(formData);
+    return { success: true, message: 'Offre ajoutée avec succès' };
+  } catch (error) {
+    console.log('Erreur ajout maison', error);
+    return { success: false, message: 'Erreur ajout maison' };
+  }
+}
+
+export async function filterByPrix(minPrix, maxPrix) {
+  try {
+    return await pb.collection('maison').getFullList({
+      filter: `prix >= ${minPrix} && prix <= ${maxPrix}`,
+      sort: "-created"
+    });
+  } catch (error) {
+    console.log('Erreur filtre prix', error);
+    return [];
+  }
+}
