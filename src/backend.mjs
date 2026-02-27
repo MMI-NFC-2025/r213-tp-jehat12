@@ -40,13 +40,19 @@ export async function getOffresBySurface(surfaceMin) {
   }
 }
 
-export async function addOffre(formData) {
+export async function addOffre(house) {
   try {
-    await pb.collection('maison').create(formData);
-    return { success: true, message: 'Offre ajoutée avec succès' };
+    await pb.collection('maison').create(house);
+    return {
+      success: true,
+      message: 'Offre ajoutée avec succès'
+    };
   } catch (error) {
-    console.log('Erreur ajout maison', error);
-    return { success: false, message: 'Erreur ajout maison' };
+    console.log('Une erreur est survenue en ajoutant la maison', error);
+    return {
+      success: false,
+      message: 'Une erreur est survenue en ajoutant la maison'
+    };
   }
 }
 

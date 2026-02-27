@@ -5,7 +5,7 @@ import { addOffre } from '../../backend.mjs';
 let message = '';
 if (Astro.request.method === "POST") {
   const formData = await Astro.request.formData();
-  const response = await addOffre(formData);
+  const response = await addOffre(Object.fromEntries(formData));
   message = response.message;
 }
 ---
