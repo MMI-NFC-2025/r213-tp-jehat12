@@ -2,28 +2,27 @@ import PocketBase from "pocketbase";
 
 const pb = new PocketBase("http://127.0.0.1:8090");
 
+export function getImageUrl(record, imageField) {
+  const file = Array.isArray(record[imageField])
+    ? record[imageField][0]
+    : record[imageField];
+  return file ? pb.files.getUrl(record, file) : null;
+}
+
 export async function getOffres() {
   try {
-    const data = await pb.collection("maison").getFullList({
+    return await pb.collection("maison").getFullList({
       sort: "-created",
     });
-    return data;
   } catch (error) {
-    console.log("Erreur getOffres()", error);
     return [];
   }
 }
 
-export function getImageUrl(record, recordImage) {
-  return pb.files.getURL(record, recordImage);
-}
-
 export async function getOffre(id) {
   try {
-    const data = await pb.collection("maison").getOne(id);
-    return data;
+    return await pb.collection("maison").getOne(id);
   } catch (error) {
-    console.log("Erreur getOffre()", error);
     return null;
   }
 }
@@ -35,35 +34,102 @@ export async function getOffresBySurface(surfaceMin) {
       sort: "-created",
     });
   } catch (error) {
-    console.log(`Erreur surface >= ${surfaceMin}`, error);
+    return [];
+  }
+}
+
+export async function getOffresSurface50() {
+  try {
+    return await pb.collection("maison").getFullList({
+      filter: "surface > 50",
+      sort: "-created",
+    });
+  } catch (error) {
+    return [];
+  }
+}
+
+export async function PrixInferieur() {
+  try {
+    return await pb.collection("maison").getFullList({
+      filter: "prix < 100000",
+      sort: "-created",
+    });
+  } catch (error) {
     return [];
   }
 }
 
 export async function addOffre(house) {
   try {
-    await pb.collection('maison').create(house);
+    await pb.collection("maison").create(house);
     return {
       success: true,
-      message: 'Offre ajoutée avec succès'
+      message: "Offre ajoutée avec succès",
     };
   } catch (error) {
-    console.log('Une erreur est survenue en ajoutant la maison', error);
     return {
       success: false,
-      message: 'Une erreur est survenue en ajoutant la maison'
+      message: "Une erreur est survenue en ajoutant la maison",
     };
   }
 }
 
 export async function filterByPrix(minPrix, maxPrix) {
   try {
-    return await pb.collection('maison').getFullList({
+    return await pb.collection("maison").getFullList({
       filter: `prix >= ${minPrix} && prix <= ${maxPrix}`,
-      sort: "-created"
+      sort: "-created",
     });
   } catch (error) {
-    console.log('Erreur filtre prix', error);
+    return [];
+  }
+}
+
+export async function getFavoris() {
+  try {
+    return await pb.collection("maison").getFullList({
+      filter: "favori=true",
+      sort: "-created",
+    });
+  } catch (error) {
+    return [];
+  }
+}
+
+export async function setFavori(house) {
+  try {
+    await pb.collection("maison").update(house.id, {
+      favori: !house.favori,
+    });
+  } catch (error) {}
+}
+
+export async function getAgents() {
+  try {
+    return await pb.collection("agent").getFullList({
+      sort: "-created",
+    });
+  } catch (error) {
+    return [];
+  }
+}
+
+export async function getAgent(id) {
+  try {
+    return await pb.collection("agent").getOne(id);
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function getOffresByAgent(agentId) {
+  try {
+    return await pb.collection("maison").getFullList({
+      filter: `agent="${agentId}"`,
+      sort: "-created",
+    });
+  } catch (error) {
     return [];
   }
 }

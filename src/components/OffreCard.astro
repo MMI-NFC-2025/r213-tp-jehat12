@@ -3,13 +3,27 @@ import PbImages from "./PbImages.astro";
 const { offre } = Astro.props;
 ---
 
-<article class="overflow-hidden rounded-lg bg-white shadow">
-  <PbImages
-    record={offre}
-    recordImage={offre.images?.[0]}
-    width={800}
-    height={520}
-  />
+<article class="offre-card relative overflow-hidden rounded-lg bg-white shadow">
+  <div class="relative">
+    <PbImages
+      record={offre}
+      recordImage="images"
+      width={800}
+      height={520}
+    />
+    <button
+      class="favoriteButton absolute top-2 right-2 rounded-full bg-white p-2 shadow"
+      data-offre={JSON.stringify(offre)}
+    >
+      <img
+        class="favorite-icon"
+        src={offre.favori ? "/icons/favorite_filled.svg" : "/icons/favorite.svg"}
+        alt="favori"
+        width="20"
+        height="20"
+      />
+    </button>
+  </div>
   <div class="p-4">
     <h3 class="text-lg font-semibold text-slate-900">
       {offre.titre || offre.nomMaison}
@@ -22,3 +36,20 @@ const { offre } = Astro.props;
     </a>
   </div>
 </article>
+
+<script>
+  import { setFavori } from "../backend.mjs";
+
+  const buttons = document.querySelectorAll(".favoriteButton");
+  buttons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const offreData = JSON.parse(button.dataset.offre);
+      const newFavori = !offreData.favori;
+      await setFavori(offreData);
+      offreData.favori = newFavori;
+      button.dataset.offre = JSON.stringify(offreData);
+      const icon = button.querySelector(".favorite-icon");
+      icon.src = newFavori ? "/icons/favorite_filled.svg" : "/icons/favorite.svg";
+    });
+  });
+</script>
